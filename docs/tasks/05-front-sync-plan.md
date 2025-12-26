@@ -89,12 +89,12 @@
 - [user_stories.md](../../user_stories.md) - US-019 (Supabase 백그라운드 동기화), US-020 (오프라인 모드 지원)
 
 ## 체크리스트
-- [ ] syncToSupabase 메서드 구현 완료
-- [ ] syncFromSupabase 메서드 구현 완료
-- [ ] backgroundSync 메서드 구현 완료
-- [ ] 동기화 큐 관리 구현 완료
-- [ ] 충돌 해결 로직 구현 완료
-- [ ] 재시도 로직 구현 완료
-- [ ] 에러 처리 구현 완료
+- [x] syncToSupabase 메서드 구현 완료
+- [x] syncFromSupabase 메서드 구현 완료
+- [x] backgroundSync 메서드 구현 완료
+- [x] 동기화 큐 관리 구현 완료
+- [x] 충돌 해결 로직 구현 완료
+- [x] 재시도 로직 구현 완료
+- [x] 에러 처리 구현 완료
 - [ ] 기본 동작 테스트 완료
 
