@@ -43,7 +43,7 @@ git commit -m "feat: TypeScript 타입 정의
 
 - 데이터베이스 타입 (User, Baseline, DailyLog)
 - 컴포넌트 Props 타입
-- 상태 관리 타입
+- 상태 관리 타입1
 - 서비스 타입"
 
 # 3. Supabase 설정
