@@ -453,7 +453,7 @@ git push -u origin main
 ---
 
 ## 10. 다음 단계1232
-
+12
 GitHub Actions가 정상 작동하면:
 
 1. ✅ 코드 품질 자동 검사12
