@@ -452,7 +452,7 @@ git push -u origin main
 
 ---
 
-## 10. 다음 단계123
+## 10. 다음 단계1232
 
 GitHub Actions가 정상 작동하면:
 
