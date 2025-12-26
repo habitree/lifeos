@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LIFE OS - 기준으로 돌아오는 루틴 앱</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+            padding: 40px 0;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 300;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            letter-spacing: -1px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #7f8c8d;
+            font-weight: 300;
+            margin-top: 10px;
+        }
+
+        .tagline {
+            font-size: 1.5rem;
+            color: #34495e;
+            margin-top: 20px;
+            font-weight: 400;
+        }
+
+        .philosophy {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .philosophy h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            font-weight: 400;
+        }
+
+        .philosophy p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #555;
+            margin-bottom: 15px;
+        }
+
+        .quote {
+            background: #f8f9fa;
+            border-left: 4px solid #3498db;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+            font-style: italic;
+            color: #555;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-card h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            font-weight: 500;
+        }
+
+        .feature-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .core-principles {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            margin: 40px 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .core-principles h2 {
+            color: #2c3e50;
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+            font-weight: 400;
+        }
+
+        .principles-list {
+            list-style: none;
+        }
+
+        .principles-list li {
+            padding: 15px 0;
+            border-bottom: 1px solid #ecf0f1;
+            color: #555;
+            font-size: 1.05rem;
+        }
+
+        .principles-list li:last-child {
+            border-bottom: none;
+        }
+
+        .principles-list li::before {
+            content: "✓ ";
+            color: #3498db;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .cta {
+            text-align: center;
+            margin: 60px 0;
+            padding: 40px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .cta h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            font-weight: 400;
+        }
+
+        .cta p {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+
+        .github-link {
+            display: inline-block;
+            background: #2c3e50;
+            color: white;
+            padding: 15px 40px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            transition: background 0.3s ease;
+        }
+
+        .github-link:hover {
+            background: #34495e;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+
+        .highlight {
+            color: #3498db;
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .tagline {
+                font-size: 1.2rem;
+            }
+
+            .philosophy,
+            .core-principles,
+            .cta {
+                padding: 25px;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>LIFE OS</h1>
+            <p class="subtitle">기준으로 돌아오는 루틴 앱</p>
+            <p class="tagline">무너져도 다시 기준으로 돌아오기</p>
+        </header>
+
+        <section class="philosophy">
+            <h2>이 앱을 만드는 이유</h2>
+            <p>이 앱은 목표를 달성하기 위한 앱이 아닙니다.</p>
+            <p>이 앱은 <span class="highlight">무너져도 다시 기준으로 돌아오기 위한 앱</span>입니다.</p>
+            
+            <div class="quote">
+                <p>이 앱은 "잘 사는 사람"을 만들지 않습니다.</p>
+                <p><strong>"다시 사는 사람"을 만듭니다.</strong></p>
+            </div>
+
+            <ul style="list-style: none; margin-top: 20px;">
+                <li style="padding: 8px 0;">• 연속성보다 복귀</li>
+                <li style="padding: 8px 0;">• 성과보다 기준</li>
+                <li style="padding: 8px 0;">• 관리보다 회복</li>
+            </ul>
+        </section>
+
+        <section class="core-principles">
+            <h2>핵심 철학</h2>
+            <ul class="principles-list">
+                <li>Baseline이 전부다</li>
+                <li>확장은 옵션이고, 복귀는 필수다</li>
+                <li>기록은 평가가 아니라 좌표다</li>
+                <li>실패라는 개념은 존재하지 않는다</li>
+                <li>오늘의 성공은 '기준으로 돌아왔는가'다</li>
+            </ul>
+        </section>
+
+        <section class="features">
+            <div class="feature-card">
+                <h3>Baseline</h3>
+                <p>딱 3개의 절대 기준만 가집니다. 수면, 이동, 기록. 점수 없음, 연속일 없음, ON/OFF만 존재합니다.</p>
+            </div>
+
+            <div class="feature-card">
+                <h3>Reset 기능</h3>
+                <p>Reset은 실패가 아닌 복귀 선언입니다. "오늘은 돌아오기만 하면 된다"는 메시지와 함께 Baseline만 남습니다.</p>
+            </div>
+
+            <div class="feature-card">
+                <h3>Phase System</h3>
+                <p>성장 단계가 아닌 현재 상태를 나타냅니다. 사용자가 직접 선택하며, 자동으로 변하지 않습니다.</p>
+            </div>
+
+            <div class="feature-card">
+                <h3>조용한 앱</h3>
+                <p>알림 폭탄, 통계 과시, 경쟁 요소가 없습니다. 당신의 기준을 조용히 지켜봅니다.</p>
+            </div>
+        </section>
+
+        <section class="philosophy">
+            <h2>이 앱이 지키는 문장</h2>
+            <div class="quote">
+                <p>이 앱은 나를 밀어붙이지 않습니다.</p>
+                <p>이 앱은 내가 돌아올 자리를 남겨둡니다.</p>
+            </div>
+        </section>
+
+        <section class="cta">
+            <h2>함께 만들어가기</h2>
+            <p>LIFE OS는 완성되지 않습니다.</p>
+            <p>이 앱은 살아 있는 동안 함께 조정됩니다.</p>
+            <br>
+            <a href="https://github.com/habitree/lifeos" class="github-link" target="_blank">GitHub에서 보기</a>
+        </section>
+
+        <footer>
+            <p>LIFE OS v0.1</p>
+            <p style="margin-top: 10px;">© 2025 habitree. All rights reserved.</p>
+        </footer>
+    </div>
+</body>
+</html>
+
