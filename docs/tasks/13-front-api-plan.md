@@ -106,11 +106,11 @@ Next.js API Routes를 구현합니다. Supabase와 연동하여 데이터를 처
 - [Next.js API Routes Documentation](https://nextjs.org/docs/app/building-your-application/routing/route-handlers)
 
 ## 체크리스트
-- [ ] User API 구현 완료
-- [ ] Baseline API 구현 완료
-- [ ] Daily Log API 구현 완료
-- [ ] Sync API 구현 완료
-- [ ] 에러 처리 구현 완료
-- [ ] 입력 검증 완료
+- [x] User API 구현 완료
+- [x] Baseline API 구현 완료
+- [x] Daily Log API 구현 완료
+- [x] Sync API 구현 완료
+- [x] 에러 처리 구현 완료
+- [x] 입력 검증 완료
 - [ ] API 테스트 완료
 

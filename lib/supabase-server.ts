@@ -17,13 +17,13 @@ export interface Database {
       };
       baselines: {
         Row: Baseline;
-        Insert: Omit<Baseline, 'id' | 'updated_at'>;
-        Update: Partial<Omit<Baseline, 'id' | 'updated_at'>>;
+        Insert: Baseline;
+        Update: Partial<Baseline>;
       };
       daily_logs: {
         Row: DailyLog;
-        Insert: Omit<DailyLog, 'id' | 'created_at' | 'updated_at'>;
-        Update: Partial<Omit<DailyLog, 'id' | 'created_at' | 'updated_at'>>;
+        Insert: DailyLog;
+        Update: Partial<DailyLog>;
       };
     };
   };

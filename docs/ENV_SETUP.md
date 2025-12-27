@@ -18,6 +18,8 @@ NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
 ```
 
+> 💡 **참고**: 프로젝트 루트에 `.env.example` 파일이 있습니다. 이를 참고하여 `.env.local` 파일을 생성하세요.
+
 ### 2. Supabase 키 찾기
 
 1. [Supabase 대시보드](https://app.supabase.com)에 로그인

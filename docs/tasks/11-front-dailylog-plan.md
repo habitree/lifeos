@@ -88,11 +88,11 @@ Daily Log 페이지와 관련 컴포넌트를 구현합니다. 하루의 기록�
 - [user_stories.md](../../user_stories.md) - US-007, US-008, US-009, US-010, US-011, US-012
 
 ## 체크리스트
-- [ ] Daily Log 페이지 구현 완료
-- [ ] DailyLogForm 컴포넌트 구현 완료
-- [ ] DatePicker 컴포넌트 구현 완료 (선택)
-- [ ] 기록 저장 기능 완료
-- [ ] 빈 기록 저장 가능 확인
-- [ ] 스타일 적용 완료
+- [x] Daily Log 페이지 구현 완료
+- [x] DailyLogForm 컴포넌트 구현 완료
+- [x] DatePicker 컴포넌트 구현 완료 (선택)
+- [x] 기록 저장 기능 완료
+- [x] 빈 기록 저장 가능 확인
+- [x] 스타일 적용 완료
 - [ ] 기본 동작 테스트 완료
 

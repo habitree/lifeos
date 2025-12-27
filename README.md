@@ -193,18 +193,41 @@ Supabase를 사용하기 위해 다음 설정이 필요합니다:
 
 ## 📚 문서
 
+### 핵심 문서
 - [설계 문서](./software_design.md) - 앱의 철학과 설계 원칙
-- [PRD 문서](./docs/prd/lifeos.md) - 제품 요구사항 문서
+- [PRD 문서](./docs/prd/lifeos_PRD.md) - 제품 요구사항 문서
+- [사용자 스토리](./user_stories.md) - 사용자 요구사항
+
+### 설정 가이드
 - [Supabase 설정 가이드](./docs/SUPABASE_SETUP.md)
+- [환경 변수 설정 가이드](./docs/ENV_SETUP.md)
+- [Vercel 환경 변수 설정 가이드](./docs/VERCEL_ENV_SETUP.md)
+
+### 배포 가이드
+- [Vercel 배포 가이드](./docs/DEPLOYMENT.md)
+
+### 개발 가이드
 - [로컬 저장소 테스트 가이드](./docs/TEST_STORAGE.md)
+- [프론트엔드 통합 가이드](./docs/tasks/front-integration-guide.md)
 - [GitHub Actions 설정 가이드](./doc/question/GITHUB_ACTIONS_SETUP.md)
 - [GitHub Secrets 설정 가이드](./doc/question/GITHUB_SECRETS_SETUP.md)
 
 ---
 
+## 🚀 배포 준비
+
+배포를 위한 설정 가이드를 확인하세요:
+
+- [배포 빠른 시작 가이드](./docs/DEPLOYMENT_QUICK_START.md) - 30분 안에 배포하기
+- [배포 준비 상태](./docs/DEPLOYMENT_STATUS.md) - 현재 준비 상태 확인
+- [배포 체크리스트](./docs/DEPLOYMENT_CHECKLIST.md) - 상세 체크리스트
+- [배포 가이드](./docs/DEPLOYMENT.md) - 전체 배포 프로세스
+
+---
+
 ## 🛠️ 개발 상태
 
-현재 **개발 중**입니다. MVP 개발을 진행 중입니다.
+현재 **배포 준비 완료** 상태입니다. MVP 개발이 완료되었으며, 배포 설정만 진행하면 됩니다.
 
 ---
 

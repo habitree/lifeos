@@ -96,11 +96,11 @@
 - [user_stories.md](../../user_stories.md) - US-004, US-011, US-015
 
 ## 체크리스트
-- [ ] useLocalStorage 훅 구현 완료
-- [ ] useSync 훅 구현 완료
-- [ ] useBaseline 훅 구현 완료
-- [ ] useDailyLog 훅 구현 완료
-- [ ] usePhase 훅 구현 완료
-- [ ] 모든 훅 export 완료
+- [x] useLocalStorage 훅 구현 완료
+- [x] useSync 훅 구현 완료
+- [x] useBaseline 훅 구현 완료
+- [x] useDailyLog 훅 구현 완료
+- [x] usePhase 훅 구현 완료
+- [x] 모든 훅 export 완료
 - [ ] 기본 동작 테스트 완료
 

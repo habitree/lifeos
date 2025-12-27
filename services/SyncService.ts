@@ -8,7 +8,8 @@ import { supabaseClient } from '../lib/supabase-client';
 import { localStorageService } from './LocalStorageService';
 import { syncQueue } from './SyncQueue';
 import { IDB_STORE_NAMES } from '../types/services';
-import type { LocalData, SyncResult, SyncStatus } from '../types/services';
+import type { LocalData, SyncResult, SyncQueueItem } from '../types/services';
+import type { SyncStatus } from '../types/state';
 import type { User, Baseline, DailyLog } from '../types';
 
 /**
@@ -54,7 +55,7 @@ class SyncService {
             id: localData.user.id,
             created_at: localData.user.created_at,
             current_phase: localData.user.current_phase,
-          });
+          } as any);
 
         if (userError) {
           throw new Error(`User 동기화 실패: ${userError.message}`);
@@ -72,7 +73,7 @@ class SyncService {
             movement: localData.baseline.movement,
             record: localData.baseline.record,
             updated_at: localData.baseline.updated_at,
-          });
+          } as any);
 
         if (baselineError) {
           throw new Error(`Baseline 동기화 실패: ${baselineError.message}`);
@@ -93,7 +94,7 @@ class SyncService {
             memo: log.memo,
             created_at: log.created_at,
             updated_at: log.updated_at,
-          });
+          } as any);
 
         if (logError) {
           console.error(`DailyLog 동기화 실패 (${log.id}):`, logError);

@@ -1,0 +1,64 @@
+name: Deploy to Vercel (Simple)
+
+# Workflow가 실행되는 조건
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:  # 수동 실행 가능
+
+jobs:
+  # Vercel 배포 작업
+  deploy:
+    name: Deploy to Vercel
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'  # main 브랜치에만 배포
+    
+    steps:
+      # 1. 코드 체크아웃
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      # 2. 환경 변수 확인
+      - name: Verify environment variables
+        run: |
+          if [ -z "${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}" ]; then
+            echo "❌ NEXT_PUBLIC_SUPABASE_URL is not set"
+            exit 1
+          fi
+          if [ -z "${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}" ]; then
+            echo "❌ NEXT_PUBLIC_SUPABASE_ANON_KEY is not set"
+            exit 1
+          fi
+          if [ -z "${{ secrets.VERCEL_TOKEN }}" ]; then
+            echo "❌ VERCEL_TOKEN is not set"
+            exit 1
+          fi
+          if [ -z "${{ secrets.VERCEL_ORG_ID }}" ]; then
+            echo "❌ VERCEL_ORG_ID is not set"
+            exit 1
+          fi
+          if [ -z "${{ secrets.VERCEL_PROJECT_ID }}" ]; then
+            echo "❌ VERCEL_PROJECT_ID is not set"
+            exit 1
+          fi
+          echo "✅ All environment variables are set"
+      
+      # 3. Vercel 배포 (Vercel이 자체 빌드 수행)
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v25
+        id: vercel-deploy
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          vercel-args: '--prod'
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+      
+      # 4. 배포 결과 출력
+      - name: Deployment URL
+        run: |
+          echo "🚀 Deployment completed!"
+          echo "Preview URL: ${{ steps.vercel-deploy.outputs.preview-url }}"
+

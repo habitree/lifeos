@@ -38,10 +38,11 @@ export type AppAction =
   | { type: 'SET_DAILY_LOGS'; payload: DailyLog[] }
   | { type: 'ADD_DAILY_LOG'; payload: DailyLog }
   | { type: 'UPDATE_DAILY_LOG'; payload: DailyLog }
-  | { type: 'SET_PHASE'; payload: Phase }
+  | { type: 'UPDATE_PHASE'; payload: Phase }
   | { type: 'SET_SYNC_STATUS'; payload: SyncStatus }
   | { type: 'SET_LAST_SYNC_AT'; payload: string }
   | { type: 'SET_ERROR'; payload: string | null }
+  | { type: 'RESET_TODAY' }
   | { type: 'RESET_STATE' };
 
 /**
@@ -57,8 +58,9 @@ export interface AppContextValue {
   setDailyLogs: (logs: DailyLog[]) => void;
   addDailyLog: (log: DailyLog) => void;
   updateDailyLog: (log: DailyLog) => void;
-  setPhase: (phase: Phase) => void;
+  updatePhase: (phase: Phase) => void;
   setSyncStatus: (status: SyncStatus) => void;
+  resetToday: () => void;
   resetState: () => void;
 }
 

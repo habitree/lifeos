@@ -78,10 +78,10 @@ Phase 페이지와 관련 컴포넌트를 구현합니다. 현재 Phase를 확�
 - [user_stories.md](../../user_stories.md) - US-013, US-014, US-015
 
 ## 체크리스트
-- [ ] Phase 페이지 구현 완료
-- [ ] PhaseSelector 컴포넌트 구현 완료
-- [ ] Phase 변경 기능 완료
-- [ ] Phase 설명 표시 완료
-- [ ] 스타일 적용 완료
+- [x] Phase 페이지 구현 완료
+- [x] PhaseSelector 컴포넌트 구현 완료
+- [x] Phase 변경 기능 완료
+- [x] Phase 설명 표시 완료
+- [x] 스타일 적용 완료
 - [ ] 기본 동작 테스트 완료
 

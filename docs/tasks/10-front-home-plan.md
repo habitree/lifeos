@@ -96,12 +96,12 @@ Home 페이지와 관련 컴포넌트를 구현합니다. Baseline 3개 항목�
 - [user_stories.md](../../user_stories.md) - US-002, US-003, US-004, US-005, US-006
 
 ## 체크리스트
-- [ ] Home 페이지 구현 완료
-- [ ] BaselineCard 컴포넌트 구현 완료
-- [ ] ResetButton 컴포넌트 구현 완료
-- [ ] PhaseIndicator 컴포넌트 구현 완료
-- [ ] Baseline 토글 기능 완료
-- [ ] Reset 기능 완료
-- [ ] 스타일 적용 완료
+- [x] Home 페이지 구현 완료
+- [x] BaselineCard 컴포넌트 구현 완료
+- [x] ResetButton 컴포넌트 구현 완료
+- [x] PhaseIndicator 컴포넌트 구현 완료
+- [x] Baseline 토글 기능 완료
+- [x] Reset 기능 완료
+- [x] 스타일 적용 완료
 - [ ] 기본 동작 테스트 완료
 

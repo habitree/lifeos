@@ -209,7 +209,7 @@ export default function TestStoragePage() {
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
           <h2 className="font-bold text-lg mb-2">사용 방법</h2>
           <ol className="list-decimal list-inside space-y-2 text-sm">
-            <li>위의 "테스트 실행" 버튼을 클릭합니다.</li>
+            <li>위의 &ldquo;테스트 실행&rdquo; 버튼을 클릭합니다.</li>
             <li>테스트 결과가 로그 영역에 표시됩니다.</li>
             <li>각 테스트 단계의 성공/실패 여부를 확인할 수 있습니다.</li>
             <li>브라우저 개발자 도구(F12)의 Console 탭에서도 상세 로그를 확인할 수 있습니다.</li>
@@ -221,7 +221,7 @@ export default function TestStoragePage() {
           <h2 className="font-bold text-lg mb-2">주의사항</h2>
           <ul className="list-disc list-inside space-y-1 text-sm">
             <li>이 테스트는 실제 데이터를 생성합니다.</li>
-            <li>"저장소 초기화" 버튼을 클릭하면 모든 테스트 데이터가 삭제됩니다.</li>
+            <li>&ldquo;저장소 초기화&rdquo; 버튼을 클릭하면 모든 테스트 데이터가 삭제됩니다.</li>
             <li>프로덕션 환경에서는 이 페이지를 제거하거나 보호해야 합니다.</li>
           </ul>
         </div>
