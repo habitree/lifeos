@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import { AppProvider } from '@/contexts/AppContext'
+import { AuthProvider } from '@/contexts/AuthContext'
 import { MainLayout } from '@/components/layout/MainLayout'
 
 /**
@@ -27,9 +28,11 @@ export default function RootLayout({
   return (
     <html lang="ko" className={inter.variable}>
       <body className="font-sans antialiased">
-        <AppProvider>
-          <MainLayout>{children}</MainLayout>
-        </AppProvider>
+        <AuthProvider>
+          <AppProvider>
+            <MainLayout>{children}</MainLayout>
+          </AppProvider>
+        </AuthProvider>
       </body>
     </html>
   )

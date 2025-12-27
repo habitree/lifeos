@@ -1,20 +1,51 @@
 /**
  * User API Route
  * 사용자 정보 조회 및 생성
+ * 인증된 사용자는 auth_user_id로 조회, 익명 사용자는 기존 로직 유지
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import { createSupabaseServerClient } from '@/lib/supabase-server-client';
 import { supabaseServer } from '@/lib/supabase-server';
 import type { User } from '@/types';
 
 /**
  * GET: 사용자 정보 조회
- * Query: userId
+ * Query: userId (선택적, 인증된 사용자는 세션에서 가져옴)
  */
 export async function GET(request: NextRequest) {
   try {
+    const supabase = createSupabaseServerClient();
+    
+    // 세션 확인
+    const { data: { session } } = await supabase.auth.getSession();
+    
+    let userId: string | null = null;
+    let user: User | null = null;
+
+    // 인증된 사용자가 있으면 auth_user_id로 조회
+    if (session?.user) {
+      const { data: authUserData, error: authUserError } = await supabaseServer
+        .from('users')
+        .select('*')
+        .eq('auth_user_id', session.user.id)
+        .single();
+
+      if (authUserError && authUserError.code !== 'PGRST116') {
+        return NextResponse.json(
+          { error: `사용자 조회 실패: ${authUserError.message}` },
+          { status: 500 }
+        );
+      }
+
+      if (authUserData) {
+        return NextResponse.json({ data: authUserData }, { status: 200 });
+      }
+    }
+
+    // 익명 사용자 또는 userId 쿼리 파라미터로 조회
     const searchParams = request.nextUrl.searchParams;
-    const userId = searchParams.get('userId');
+    userId = searchParams.get('userId');
 
     if (!userId) {
       return NextResponse.json(

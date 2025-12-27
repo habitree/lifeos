@@ -1,21 +1,42 @@
 /**
  * Sync API Route
  * 동기화 요청 및 상태 확인
+ * 인증된 사용자는 세션에서 userId 확인, 익명 사용자는 기존 로직 유지
  */
 
 import { NextRequest, NextResponse } from 'next/server';
+import { createSupabaseServerClient } from '@/lib/supabase-server-client';
 import { supabaseServer } from '@/lib/supabase-server';
 import type { LocalData } from '@/types/services';
 
 /**
  * POST: 동기화 요청
- * Body: { userId, localData }
+ * Body: { userId?, localData }
  * 로컬 우선 원칙: 로컬 데이터가 우선
+ * 인증된 사용자는 세션에서 userId 확인
  */
 export async function POST(request: NextRequest) {
   try {
+    const supabase = createSupabaseServerClient();
+    
+    // 세션 확인
+    const { data: { session } } = await supabase.auth.getSession();
+    
     const body = await request.json();
-    const { userId, localData } = body;
+    let { userId, localData } = body;
+
+    // 인증된 사용자가 있으면 세션에서 userId 가져오기
+    if (session?.user) {
+      const { data: authUserData } = await supabaseServer
+        .from('users')
+        .select('id')
+        .eq('auth_user_id', session.user.id)
+        .single();
+
+      if (authUserData) {
+        userId = authUserData.id;
+      }
+    }
 
     if (!userId) {
       return NextResponse.json(
@@ -156,12 +177,30 @@ export async function POST(request: NextRequest) {
 
 /**
  * GET: 동기화 상태 확인
- * Query: userId (선택)
+ * Query: userId (선택, 인증된 사용자는 세션에서 가져옴)
  */
 export async function GET(request: NextRequest) {
   try {
+    const supabase = createSupabaseServerClient();
+    
+    // 세션 확인
+    const { data: { session } } = await supabase.auth.getSession();
+    
     const searchParams = request.nextUrl.searchParams;
-    const userId = searchParams.get('userId');
+    let userId = searchParams.get('userId');
+
+    // 인증된 사용자가 있으면 세션에서 userId 가져오기
+    if (session?.user && !userId) {
+      const { data: authUserData } = await supabaseServer
+        .from('users')
+        .select('id')
+        .eq('auth_user_id', session.user.id)
+        .single();
+
+      if (authUserData) {
+        userId = authUserData.id;
+      }
+    }
 
     // userId가 제공되면 해당 사용자의 마지막 동기화 시간 확인
     if (userId) {

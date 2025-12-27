@@ -40,8 +40,9 @@ if (!supabaseUrl || !supabaseAnonKey) {
 
 /**
  * 클라이언트 사이드 Supabase 클라이언트
- * - persistSession: false - 로그인 없이 사용 (익명 사용자 지원)
- * - autoRefreshToken: false - 토큰 자동 갱신 비활성화
+ * - persistSession: true - 세션 유지 활성화 (카카오 로그인 지원)
+ * - autoRefreshToken: true - 토큰 자동 갱신
+ * - detectSessionInUrl: true - URL에서 세션 감지 (OAuth 콜백 처리)
  * - Realtime: eventsPerSecond: 10 - 실시간 이벤트 제한
  */
 export const supabaseClient = createClient<Database>(
@@ -49,8 +50,9 @@ export const supabaseClient = createClient<Database>(
   supabaseAnonKey,
   {
     auth: {
-      persistSession: false, // 로그인 없이 사용
-      autoRefreshToken: false,
+      persistSession: true, // 세션 유지 활성화
+      autoRefreshToken: true, // 토큰 자동 갱신
+      detectSessionInUrl: true, // URL에서 세션 감지 (OAuth 콜백)
     },
     realtime: {
       params: {

@@ -10,16 +10,30 @@
 CREATE TABLE IF NOT EXISTS users (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    current_phase INTEGER NOT NULL DEFAULT 1 CHECK (current_phase >= 1 AND current_phase <= 4)
+    current_phase INTEGER NOT NULL DEFAULT 1 CHECK (current_phase >= 1 AND current_phase <= 4),
+    auth_user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+    kakao_id BIGINT UNIQUE,
+    email TEXT,
+    nickname TEXT,
+    profile_image TEXT,
+    is_anonymous BOOLEAN DEFAULT true
 );
 
 -- 익명 사용자 지원을 위한 인덱스
 CREATE INDEX IF NOT EXISTS idx_users_created_at ON users(created_at);
+CREATE INDEX IF NOT EXISTS idx_users_auth_user_id ON users(auth_user_id);
+CREATE INDEX IF NOT EXISTS idx_users_kakao_id ON users(kakao_id);
 
 COMMENT ON TABLE users IS '사용자 정보 테이블';
 COMMENT ON COLUMN users.id IS '사용자 고유 ID (UUID)';
 COMMENT ON COLUMN users.created_at IS '생성 일시';
 COMMENT ON COLUMN users.current_phase IS '현재 Phase (1-4)';
+COMMENT ON COLUMN users.auth_user_id IS 'Supabase Auth 사용자 ID';
+COMMENT ON COLUMN users.kakao_id IS '카카오 사용자 ID';
+COMMENT ON COLUMN users.email IS '이메일';
+COMMENT ON COLUMN users.nickname IS '닉네임';
+COMMENT ON COLUMN users.profile_image IS '프로필 이미지 URL';
+COMMENT ON COLUMN users.is_anonymous IS '익명 사용자 여부';
 
 -- ============================================
 -- 2. baselines 테이블
@@ -92,4 +106,13 @@ CREATE TRIGGER update_daily_logs_updated_at
     BEFORE UPDATE ON daily_logs
     FOR EACH ROW
     EXECUTE FUNCTION update_updated_at_column();
+
+-- ============================================
+-- 5. 사용자 테이블 마이그레이션 (기존 테이블에 컬럼 추가)
+-- ============================================
+-- ⚠️ 주의: 기존 테이블이 있는 경우 migration_add_auth_columns.sql 파일을 별도로 실행하세요.
+-- 이 부분은 CREATE TABLE IF NOT EXISTS로 테이블이 생성되지 않은 경우에만 실행됩니다.
+-- 
+-- 기존 테이블에 컬럼을 추가하려면:
+-- migration_add_auth_columns.sql 파일을 실행하세요.
 

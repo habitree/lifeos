@@ -10,6 +10,12 @@ export interface User {
   id: string;
   created_at: string;
   current_phase: 1 | 2 | 3 | 4;
+  auth_user_id?: string | null;
+  kakao_id?: number | null;
+  email?: string | null;
+  nickname?: string | null;
+  profile_image?: string | null;
+  is_anonymous: boolean;
 }
 
 /**

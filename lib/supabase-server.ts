@@ -12,18 +12,18 @@ export interface Database {
     Tables: {
       users: {
         Row: User;
-        Insert: Omit<User, 'id' | 'created_at'>;
-        Update: Partial<Omit<User, 'id' | 'created_at'>>;
+        Insert: any;
+        Update: any;
       };
       baselines: {
         Row: Baseline;
-        Insert: Baseline;
-        Update: Partial<Baseline>;
+        Insert: any;
+        Update: any;
       };
       daily_logs: {
         Row: DailyLog;
-        Insert: DailyLog;
-        Update: Partial<DailyLog>;
+        Insert: any;
+        Update: any;
       };
     };
   };
@@ -39,18 +39,19 @@ if (!supabaseUrl || !supabaseAnonKey) {
 }
 
 /**
- * 서버 사이드 Supabase 클라이언트
- * - API Routes 및 Server Components에서 사용
- * - 익명 사용자 지원 (로그인 없이 사용)
- * - persistSession: false
- * - autoRefreshToken: false
+ * 서버 사이드 Supabase 클라이언트 (레거시)
+ * - API Routes에서 사용 (쿠키 기반 세션 미지원)
+ * - 익명 사용자 지원
+ * - 주의: 세션 관리가 필요한 경우 createSupabaseServerClient() 사용 권장
+ * 
+ * @deprecated 세션 관리가 필요한 경우 lib/supabase-server-client.ts의 createSupabaseServerClient() 사용
  */
 export const supabaseServer = createClient<Database>(
   supabaseUrl,
   supabaseAnonKey,
   {
     auth: {
-      persistSession: false, // 로그인 없이 사용
+      persistSession: false,
       autoRefreshToken: false,
     },
     realtime: {

@@ -1,7 +1,12 @@
 -- ============================================
 -- LIFE OS - Row Level Security (RLS) 정책
 -- ============================================
--- 이 파일은 schema.sql 실행 후 실행하세요.
+-- ⚠️ 중요: 이 파일을 실행하기 전에 반드시 다음을 확인하세요:
+-- 
+-- 1. users 테이블에 auth_user_id 컬럼이 있어야 합니다
+-- 2. 새로 시작하는 경우: schema.sql 실행
+-- 3. 기존 테이블이 있는 경우: migration_add_auth_columns.sql 실행 후 이 파일 실행
+-- 
 -- Supabase 대시보드 > SQL Editor > New Query에서 실행
 
 -- ============================================
@@ -14,19 +19,19 @@ ALTER TABLE users ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Users can access their own data" ON users;
 DROP POLICY IF EXISTS "Allow anonymous access to users" ON users;
 
--- 익명 사용자 포함 모든 사용자가 자신의 데이터에 접근 가능
--- auth.uid() = id: 인증된 사용자는 자신의 데이터만
+-- 인증된 사용자는 auth_user_id로, 익명 사용자는 id로 접근 가능
+-- auth.uid() = auth_user_id: 인증된 사용자는 자신의 auth_user_id로 필터링
 -- auth.role() = 'anon': 익명 사용자는 모든 데이터 접근 가능 (로컬에서 user_id로 필터링)
 CREATE POLICY "Users can access their own data"
     ON users
     FOR ALL
     USING (
-        auth.uid() = id OR 
-        auth.role() = 'anon'
+        (auth.uid() IS NOT NULL AND auth.uid() = auth_user_id) OR 
+        (auth.role() = 'anon')
     )
     WITH CHECK (
-        auth.uid() = id OR 
-        auth.role() = 'anon'
+        (auth.uid() IS NOT NULL AND auth.uid() = auth_user_id) OR 
+        (auth.role() = 'anon')
     );
 
 -- ============================================
@@ -39,17 +44,26 @@ ALTER TABLE baselines ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Users can access their own baselines" ON baselines;
 DROP POLICY IF EXISTS "Allow anonymous access to baselines" ON baselines;
 
--- 익명 사용자 포함 모든 사용자가 자신의 baseline에 접근 가능
+-- 인증된 사용자는 자신의 baseline에 접근 가능 (users 테이블의 auth_user_id로 조인)
+-- 익명 사용자는 모든 baseline에 접근 가능 (로컬에서 user_id로 필터링)
 CREATE POLICY "Users can access their own baselines"
     ON baselines
     FOR ALL
     USING (
-        auth.uid() = user_id OR 
-        auth.role() = 'anon'
+        (auth.uid() IS NOT NULL AND EXISTS (
+            SELECT 1 FROM users 
+            WHERE users.id = baselines.user_id 
+            AND users.auth_user_id = auth.uid()
+        )) OR 
+        (auth.role() = 'anon')
     )
     WITH CHECK (
-        auth.uid() = user_id OR 
-        auth.role() = 'anon'
+        (auth.uid() IS NOT NULL AND EXISTS (
+            SELECT 1 FROM users 
+            WHERE users.id = baselines.user_id 
+            AND users.auth_user_id = auth.uid()
+        )) OR 
+        (auth.role() = 'anon')
     );
 
 -- ============================================
@@ -62,17 +76,26 @@ ALTER TABLE daily_logs ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Users can access their own daily logs" ON daily_logs;
 DROP POLICY IF EXISTS "Allow anonymous access to daily logs" ON daily_logs;
 
--- 익명 사용자 포함 모든 사용자가 자신의 daily_logs에 접근 가능
+-- 인증된 사용자는 자신의 daily_logs에 접근 가능 (users 테이블의 auth_user_id로 조인)
+-- 익명 사용자는 모든 daily_logs에 접근 가능 (로컬에서 user_id로 필터링)
 CREATE POLICY "Users can access their own daily logs"
     ON daily_logs
     FOR ALL
     USING (
-        auth.uid() = user_id OR 
-        auth.role() = 'anon'
+        (auth.uid() IS NOT NULL AND EXISTS (
+            SELECT 1 FROM users 
+            WHERE users.id = daily_logs.user_id 
+            AND users.auth_user_id = auth.uid()
+        )) OR 
+        (auth.role() = 'anon')
     )
     WITH CHECK (
-        auth.uid() = user_id OR 
-        auth.role() = 'anon'
+        (auth.uid() IS NOT NULL AND EXISTS (
+            SELECT 1 FROM users 
+            WHERE users.id = daily_logs.user_id 
+            AND users.auth_user_id = auth.uid()
+        )) OR 
+        (auth.role() = 'anon')
     );
 
 -- ============================================

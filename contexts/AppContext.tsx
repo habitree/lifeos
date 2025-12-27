@@ -10,6 +10,7 @@ import React, { createContext, useContext, useReducer, useEffect, useCallback, u
 import { appReducer, initialState } from '../reducers/appReducer';
 import { localStorageService } from '../services/LocalStorageService';
 import { IDB_STORE_NAMES } from '../types/services';
+import { useAuth } from './AuthContext';
 import type { AppState, AppAction, AppContextValue, Phase, SyncStatus } from '../types/state';
 import type { User, Baseline, DailyLog } from '../types/database';
 
@@ -28,56 +29,96 @@ interface AppProviderProps {
 /**
  * AppProvider 컴포넌트
  * 전역 상태를 제공하고 로컬 저장소와 동기화합니다.
+ * AuthContext와 통합하여 인증된 사용자를 우선 로드합니다.
  */
 export function AppProvider({ children }: AppProviderProps) {
   const [state, dispatch] = useReducer(appReducer, initialState);
   const [isInitialized, setIsInitialized] = React.useState(false);
+  const { user: authUser, session, loading: authLoading } = useAuth();
 
   /**
    * 로컬 저장소에서 초기 데이터 로드
+   * 인증된 사용자를 우선 로드하고, 없으면 익명 사용자 생성
    */
   useEffect(() => {
+    // AuthContext가 로딩 중이면 대기
+    if (authLoading) {
+      return;
+    }
+
     const loadInitialData = async () => {
       try {
-        // User 로드
-        const userId = localStorage.getItem('life-os:user-id') || 'default-user';
-        const user = await localStorageService.get<User>(
-          IDB_STORE_NAMES.USER,
-          userId
+        let user: User | null = null;
+        let userId: string | null = null;
+
+        // 1. 인증된 사용자가 있으면 우선 사용
+        if (authUser && session) {
+          user = authUser;
+          userId = authUser.id;
+          
+          // 로컬 저장소에 저장
+          await localStorageService.set(IDB_STORE_NAMES.USER, userId, user);
+          localStorage.setItem('life-os:user-id', userId);
+        } else {
+          // 2. 인증된 사용자가 없으면 기존 로컬 사용자 확인
+          userId = localStorage.getItem('life-os:user-id');
+          user = userId ? await localStorageService.get<User>(
+            IDB_STORE_NAMES.USER,
+            userId
+          ) : null;
+
+          // 3. 로컬 사용자도 없으면 익명 사용자 생성
+          if (!user) {
+            // UUID 생성
+            userId = crypto.randomUUID();
+            
+            // 새 익명 사용자 생성
+            const newUser: User = {
+              id: userId,
+              created_at: new Date().toISOString(),
+              current_phase: 1,
+              is_anonymous: true,
+            };
+
+            // 로컬 저장소에 저장
+            await localStorageService.set(IDB_STORE_NAMES.USER, userId, newUser);
+            localStorage.setItem('life-os:user-id', userId);
+            
+            user = newUser;
+          }
+        }
+
+        // 사용자 설정
+        dispatch({ type: 'SET_USER', payload: user });
+
+        // Baseline 로드
+        const baseline = await localStorageService.getByIndex<Baseline>(
+          IDB_STORE_NAMES.BASELINE,
+          'user_id',
+          userId!
+        ).then((items) => items[0] || null);
+
+        if (baseline) {
+          dispatch({ type: 'SET_BASELINE', payload: baseline });
+        }
+
+        // DailyLogs 로드
+        const dailyLogs = await localStorageService.getByIndex<DailyLog>(
+          IDB_STORE_NAMES.DAILY_LOGS,
+          'user_id',
+          userId!
         );
 
-        if (user) {
-          dispatch({ type: 'SET_USER', payload: user });
+        if (dailyLogs && dailyLogs.length > 0) {
+          dispatch({ type: 'SET_DAILY_LOGS', payload: dailyLogs });
+        }
 
-          // Baseline 로드
-          const baseline = await localStorageService.getByIndex<Baseline>(
-            IDB_STORE_NAMES.BASELINE,
-            'user_id',
-            userId
-          ).then((items) => items[0] || null);
-
-          if (baseline) {
-            dispatch({ type: 'SET_BASELINE', payload: baseline });
-          }
-
-          // DailyLogs 로드
-          const dailyLogs = await localStorageService.getByIndex<DailyLog>(
-            IDB_STORE_NAMES.DAILY_LOGS,
-            'user_id',
-            userId
-          );
-
-          if (dailyLogs && dailyLogs.length > 0) {
-            dispatch({ type: 'SET_DAILY_LOGS', payload: dailyLogs });
-          }
-
-          // Phase 로드
-          const savedPhase = localStorage.getItem('life-os:current-phase');
-          if (savedPhase) {
-            const phase = parseInt(savedPhase, 10) as Phase;
-            if (phase >= 1 && phase <= 4) {
-              dispatch({ type: 'UPDATE_PHASE', payload: phase });
-            }
+        // Phase 로드
+        const savedPhase = localStorage.getItem('life-os:current-phase');
+        if (savedPhase) {
+          const phase = parseInt(savedPhase, 10) as Phase;
+          if (phase >= 1 && phase <= 4) {
+            dispatch({ type: 'UPDATE_PHASE', payload: phase });
           }
         }
 
@@ -93,7 +134,35 @@ export function AppProvider({ children }: AppProviderProps) {
     };
 
     loadInitialData();
-  }, []);
+  }, [authUser, session, authLoading]);
+
+  /**
+   * AuthContext의 사용자 변경 시 AppContext 업데이트
+   */
+  useEffect(() => {
+    if (!isInitialized || authLoading) return;
+
+    if (authUser && session) {
+      // 인증된 사용자가 변경되면 업데이트
+      dispatch({ type: 'SET_USER', payload: authUser });
+      
+      // 로컬 저장소에 저장
+      localStorageService.set(IDB_STORE_NAMES.USER, authUser.id, authUser).catch(console.error);
+      localStorage.setItem('life-os:user-id', authUser.id);
+    } else if (!authUser && !session) {
+      // 로그아웃 시 기존 로컬 사용자 확인 또는 생성
+      const localUserId = localStorage.getItem('life-os:user-id');
+      if (localUserId) {
+        localStorageService.get<User>(IDB_STORE_NAMES.USER, localUserId)
+          .then((localUser) => {
+            if (localUser) {
+              dispatch({ type: 'SET_USER', payload: localUser });
+            }
+          })
+          .catch(console.error);
+      }
+    }
+  }, [authUser, session, authLoading, isInitialized]);
 
   /**
    * 상태 변경 시 로컬 저장소에 자동 저장
