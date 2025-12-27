@@ -23,6 +23,7 @@ export async function testLocalStorageService() {
       id: 'test-user-1',
       created_at: new Date().toISOString(),
       current_phase: 1,
+      is_anonymous: true,
     };
 
     await localStorageService.set(IDB_STORE_NAMES.USER, testUser.id, testUser);

@@ -48,6 +48,7 @@
 - `contexts/AppContext.tsx`
 - `lib/supabase-server-client.ts`
 - `services/UserMergeService.ts`
+- `services/__tests__/LocalStorageService.test.ts` (GitHub Actions 빌드 오류)
 
 ## 추가 수정 사항
 
