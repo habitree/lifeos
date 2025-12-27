@@ -76,6 +76,7 @@ export async function GET(request: NextRequest) {
         // 새 사용자 생성
         const newUser: Omit<User, 'id' | 'created_at'> = {
           current_phase: 1,
+          is_anonymous: true,
         };
 
         const { data: createdUser, error: createError } = await supabaseServer
@@ -152,6 +153,7 @@ export async function POST(request: NextRequest) {
       .insert({
         id: finalUserId,
         current_phase: currentPhase,
+        is_anonymous: true,
       } as any)
       .select()
       .single();

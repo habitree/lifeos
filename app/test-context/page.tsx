@@ -45,6 +45,7 @@ function ContextTestContent() {
         id: 'test-user-1',
         created_at: new Date().toISOString(),
         current_phase: 1,
+        is_anonymous: true,
       };
       setUser(testUser);
       addLog('✅ User 설정 완료');

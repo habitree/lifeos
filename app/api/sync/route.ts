@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
         .single();
 
       if (authUserData) {
-        userId = authUserData.id;
+        userId = (authUserData as { id: string }).id;
       }
     }
 
@@ -198,7 +198,7 @@ export async function GET(request: NextRequest) {
         .single();
 
       if (authUserData) {
-        userId = authUserData.id;
+        userId = (authUserData as { id: string }).id;
       }
     }
 

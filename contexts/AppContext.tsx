@@ -62,10 +62,10 @@ export function AppProvider({ children }: AppProviderProps) {
         } else {
           // 2. 인증된 사용자가 없으면 기존 로컬 사용자 확인
           userId = localStorage.getItem('life-os:user-id');
-          user = userId ? await localStorageService.get<User>(
+          user = userId ? (await localStorageService.get<User>(
             IDB_STORE_NAMES.USER,
             userId
-          ) : null;
+          )) ?? null : null;
 
           // 3. 로컬 사용자도 없으면 익명 사용자 생성
           if (!user) {

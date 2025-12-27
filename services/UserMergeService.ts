@@ -102,7 +102,7 @@ class UserMergeService {
           is_anonymous: false,
         };
 
-        const { data: updatedUserData, error: updateUserError } = await supabaseClient
+        const { data: updatedUserData, error: updateUserError } = await (supabaseClient as any)
           .from('users')
           .update(updatedUser as any)
           .eq('auth_user_id', authUserId)
@@ -122,12 +122,12 @@ class UserMergeService {
           const { data: existingBaseline } = await supabaseClient
             .from('baselines')
             .select('*')
-            .eq('user_id', updatedUserData.id)
+            .eq('user_id', (updatedUserData as any).id)
             .single();
 
           if (existingBaseline) {
             // 기존 Baseline이 있으면 업데이트 (로컬 데이터 우선)
-            const { data: updatedBaseline, error: baselineError } = await supabaseClient
+            const { data: updatedBaseline, error: baselineError } = await (supabaseClient as any)
               .from('baselines')
               .update({
                 sleep: localBaseline.sleep,
@@ -135,7 +135,7 @@ class UserMergeService {
                 record: localBaseline.record,
                 updated_at: localBaseline.updated_at,
               } as any)
-              .eq('user_id', updatedUserData.id)
+              .eq('user_id', (updatedUserData as any).id)
               .select()
               .single();
 
@@ -149,7 +149,7 @@ class UserMergeService {
             const { data: newBaseline, error: baselineError } = await supabaseClient
               .from('baselines')
               .insert({
-                user_id: updatedUserData.id,
+                user_id: (updatedUserData as any).id,
                 sleep: localBaseline.sleep,
                 movement: localBaseline.movement,
                 record: localBaseline.record,
@@ -173,13 +173,14 @@ class UserMergeService {
           const { data: existingLog } = await supabaseClient
             .from('daily_logs')
             .select('*')
-            .eq('user_id', updatedUserData.id)
+            .eq('user_id', (updatedUserData as any).id)
             .eq('log_date', localLog.log_date)
             .single();
 
           if (existingLog) {
             // 기존 로그가 있으면 업데이트 (로컬 데이터 우선)
-            const { data: updatedLog, error: logError } = await supabaseClient
+            const existingLogTyped = existingLog as DailyLog;
+            const { data: updatedLog, error: logError } = await (supabaseClient as any)
               .from('daily_logs')
               .update({
                 baseline_check: localLog.baseline_check,
@@ -188,7 +189,7 @@ class UserMergeService {
                 memo: localLog.memo,
                 updated_at: localLog.updated_at,
               } as any)
-              .eq('id', existingLog.id)
+              .eq('id', existingLogTyped.id)
               .select()
               .single();
 
@@ -202,7 +203,7 @@ class UserMergeService {
             const { data: newLog, error: logError } = await supabaseClient
               .from('daily_logs')
               .insert({
-                user_id: updatedUserData.id,
+                user_id: (updatedUserData as any).id,
                 log_date: localLog.log_date,
                 baseline_check: localLog.baseline_check,
                 one_line: localLog.one_line,
@@ -223,8 +224,9 @@ class UserMergeService {
         }
 
         // 7. 로컬 저장소 업데이트
-        await localStorageService.set(IDB_STORE_NAMES.USER, updatedUserData.id, updatedUserData as User);
-        localStorage.setItem('life-os:user-id', updatedUserData.id);
+        const updatedUserDataTyped = updatedUserData as User;
+        await localStorageService.set(IDB_STORE_NAMES.USER, updatedUserDataTyped.id, updatedUserDataTyped);
+        localStorage.setItem('life-os:user-id', updatedUserDataTyped.id);
 
         if (mergedBaseline) {
           await localStorageService.set(IDB_STORE_NAMES.BASELINE, mergedBaseline.id, mergedBaseline);

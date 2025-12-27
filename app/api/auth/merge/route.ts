@@ -108,17 +108,17 @@ export async function POST(request: NextRequest) {
     // 5. Baseline 병합
     let mergedBaseline: Baseline | null = null;
     if (localBaselines && localBaselines.length > 0) {
-      const localBaseline = localBaselines[0];
+      const localBaseline = localBaselines[0] as Baseline;
 
       const { data: existingBaseline } = await supabaseServer
         .from('baselines')
         .select('*')
-        .eq('user_id', updatedUser.id)
+        .eq('user_id', (updatedUser as any).id)
         .single();
 
       if (existingBaseline) {
         // 업데이트
-        const { data: updatedBaseline, error: baselineError } = await supabaseServer
+        const { data: updatedBaseline, error: baselineError } = await (supabaseServer as any)
           .from('baselines')
           .update({
             sleep: localBaseline.sleep,
@@ -126,7 +126,7 @@ export async function POST(request: NextRequest) {
             record: localBaseline.record,
             updated_at: localBaseline.updated_at,
           } as any)
-          .eq('user_id', updatedUser.id)
+          .eq('user_id', (updatedUser as any).id)
           .select()
           .single();
 
@@ -137,9 +137,9 @@ export async function POST(request: NextRequest) {
         // 생성
         const { data: newBaseline, error: baselineError } = await supabaseServer
           .from('baselines')
-          .insert({
-            user_id: updatedUser.id,
-            sleep: localBaseline.sleep,
+            .insert({
+              user_id: (updatedUser as any).id,
+              sleep: localBaseline.sleep,
             movement: localBaseline.movement,
             record: localBaseline.record,
             updated_at: localBaseline.updated_at,
@@ -156,17 +156,18 @@ export async function POST(request: NextRequest) {
     // 6. DailyLogs 병합
     const mergedDailyLogs: DailyLog[] = [];
     if (localDailyLogs) {
-      for (const localLog of localDailyLogs) {
+      for (const localLog of localDailyLogs as DailyLog[]) {
         const { data: existingLog } = await supabaseServer
           .from('daily_logs')
           .select('*')
-          .eq('user_id', updatedUser.id)
+          .eq('user_id', (updatedUser as any).id)
           .eq('log_date', localLog.log_date)
           .single();
 
         if (existingLog) {
+          const existingLogTyped = existingLog as DailyLog;
           // 업데이트
-          const { data: updatedLog, error: logError } = await supabaseServer
+          const { data: updatedLog, error: logError } = await (supabaseServer as any)
             .from('daily_logs')
             .update({
               baseline_check: localLog.baseline_check,
@@ -175,7 +176,7 @@ export async function POST(request: NextRequest) {
               memo: localLog.memo,
               updated_at: localLog.updated_at,
             } as any)
-            .eq('id', existingLog.id)
+            .eq('id', existingLogTyped.id)
             .select()
             .single();
 
@@ -187,7 +188,7 @@ export async function POST(request: NextRequest) {
           const { data: newLog, error: logError } = await supabaseServer
             .from('daily_logs')
             .insert({
-              user_id: updatedUser.id,
+              user_id: (updatedUser as any).id,
               log_date: localLog.log_date,
               baseline_check: localLog.baseline_check,
               one_line: localLog.one_line,
